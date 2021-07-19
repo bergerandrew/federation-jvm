@@ -1,0 +1,5 @@
+schema @contact(name: "Foo") {
+    query: Query
+}
+
+type Query

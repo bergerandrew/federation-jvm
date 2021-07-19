@@ -1,3 +1,7 @@
+schema @contact(name : "Foo", ) {
+  query: Query
+}
+
 directive @contact(description: String, name: String, url: String) on SCHEMA
 
 directive @extends on OBJECT | INTERFACE

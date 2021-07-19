@@ -703,10 +703,17 @@ public class FederationSdlPrinter {
                 if (subscriptionType != null && !subscriptionType.getName().equals("Subscription")) {
                     needsSchemaPrinted = true;
                 }
+                if (!schema.getSchemaDirectives().isEmpty()) {
+                    needsSchemaPrinted = true;
+                }
             }
 
             if (needsSchemaPrinted) {
-                out.format("schema {\n");
+                out.format("schema");
+                if (!schema.getSchemaDirectives().isEmpty()) {
+                    out.format(directivesString(schema.getSchemaDirectives()));
+                }
+                out.format(" {\n");
                 if (queryType != null) {
                     out.format("  query: %s\n", queryType.getName());
                 }
@@ -795,6 +802,10 @@ public class FederationSdlPrinter {
             sb.append(halfPrefix).append(")");
         }
         return sb.toString();
+    }
+
+    String directivesString(List<GraphQLDirective> directives) {
+        return directivesString(null, directives);
     }
 
     String directivesString(Class<? extends GraphQLSchemaElement> parent, List<GraphQLDirective> directives) {

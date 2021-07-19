@@ -1,6 +1,7 @@
 package com.apollographql.federation.graphqljava;
 
 import graphql.PublicApi;
+import graphql.Scalars;
 import graphql.language.DirectiveDefinition;
 import graphql.language.DirectiveLocation;
 import graphql.language.InputValueDefinition;
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
 import static graphql.introspection.Introspection.DirectiveLocation.FIELD_DEFINITION;
 import static graphql.introspection.Introspection.DirectiveLocation.INTERFACE;
 import static graphql.introspection.Introspection.DirectiveLocation.OBJECT;
+import static graphql.introspection.Introspection.DirectiveLocation.SCHEMA;
 import static graphql.language.DirectiveDefinition.newDirectiveDefinition;
 import static graphql.language.DirectiveLocation.newDirectiveLocation;
 import static graphql.language.InputValueDefinition.newInputValueDefinition;
@@ -41,6 +43,10 @@ public final class FederationDirectives {
 
     private static final DirectiveLocation DL_FIELD_DEFINITION = newDirectiveLocation()
             .name("FIELD_DEFINITION")
+            .build();
+
+    private static final DirectiveLocation DL_SCHEMA = newDirectiveLocation()
+            .name("SCHEMA")
             .build();
 
     /* fields: _FieldSet */
@@ -157,6 +163,94 @@ public final class FederationDirectives {
             .directiveLocations(Arrays.asList(DL_OBJECT, DL_INTERFACE))
             .build();
 
+    /* name: String! */
+
+    private static final GraphQLArgument nameArgument = newArgument()
+            .name("name")
+            .type(Scalars.GraphQLString)
+            .build();
+
+    private static GraphQLArgument nameArgument(String value) {
+        return newArgument(nameArgument)
+                .value(value)
+                .build();
+    }
+
+    private static final InputValueDefinition nameDefinition = newInputValueDefinition()
+            .name("name")
+            .type(new TypeName("String"))
+            .build();
+
+    /* url: String! */
+
+
+    private static final GraphQLArgument urlArgument = newArgument()
+            .name("url")
+            .type(Scalars.GraphQLString)
+            .build();
+
+    private static GraphQLArgument urlArgument(String value) {
+        return newArgument(urlArgument)
+                .value(value)
+                .build();
+    }
+
+    private static final InputValueDefinition urlDefinition = newInputValueDefinition()
+            .name("url")
+            .type(new TypeName("String"))
+            .build();
+
+    /* description: String! */
+
+    private static final GraphQLArgument descriptionArgument = newArgument()
+            .name("description")
+            .type(Scalars.GraphQLString)
+            .build();
+
+    private static GraphQLArgument descriptionArgument(String value) {
+        return newArgument(descriptionArgument)
+                .value(value)
+                .build();
+    }
+
+    private static final InputValueDefinition descriptionDefinition = newInputValueDefinition()
+            .name("description")
+            .type(new TypeName("String"))
+            .build();
+
+    /* directive @contact(
+    name: String!
+    url: String
+    description: String) on SCHEMA */
+
+    public static final String contactName = "contact";
+
+    public static final GraphQLDirective contact = newDirective()
+            .name(contactName)
+            .validLocations(SCHEMA)
+            .argument(nameArgument)
+            .argument(urlArgument)
+            .argument(descriptionArgument)
+            .build();
+
+    public static GraphQLDirective contact(String name, String url, String description) {
+        return newDirective(contact)
+                .argument(nameArgument(name))
+                .argument(urlArgument(url))
+                .argument(descriptionArgument(description))
+                .build();
+    }
+
+    public static final DirectiveDefinition contactDefinition = newDirectiveDefinition()
+            .name(contactName)
+            .directiveLocation(DL_SCHEMA)
+            .inputValueDefinitions(Stream.of(
+                    nameDefinition,
+                    urlDefinition,
+                    descriptionDefinition
+            ).collect(Collectors.toList()))
+            .build();
+
 
     private FederationDirectives() {
     }
@@ -175,7 +269,8 @@ public final class FederationDirectives {
                 external,
                 requires,
                 provides,
-                extends_
+                extends_,
+                contact
         )
                 .sorted(Comparator.comparing(GraphQLDirective::getName))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
@@ -184,7 +279,8 @@ public final class FederationDirectives {
                 externalDefinition,
                 requiresDefinition,
                 providesDefinition,
-                extendsDefinition
+                extendsDefinition,
+                contactDefinition
         )
                 .sorted(Comparator.comparing(DirectiveDefinition::getName))
                 .collect(Collectors.toCollection(LinkedHashSet::new));

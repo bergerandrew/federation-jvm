@@ -43,6 +43,9 @@ class FederationTest {
     private final String printerEscapingExpectedSDL = TestUtils.readResource("schemas/printerEscapingExpected.graphql");
     private final String printerFilterSDL = TestUtils.readResource("schemas/printerFilter.graphql");
     private final String printerFilterExpectedSDL = TestUtils.readResource("schemas/printerFilterExpected.graphql");
+    private final String emptyWithContactQuerySDL = TestUtils.readResource("schemas/emptyWithContactQuery.graphql");
+    private final String emptyWithContactQueryFederatedSDL = TestUtils.readResource("schemas/emptyWithContactQueryFederated.graphql");
+    private final String emptyWithContactQueryServiceSDL = TestUtils.readResource("schemas/emptyWithContactQueryService.graphql");
 
     @Test
     void testEmptySDL() {
@@ -54,6 +57,12 @@ class FederationTest {
     void testEmptyWithExtendQuerySDL() {
         final GraphQLSchema federatedSchema = Federation.transform(emptyWithExtendQuerySDL).build();
         SchemaUtils.assertSDL(federatedSchema, emptyWithExtendQueryFederatedSDL, emptyWithExtendQueryServiceSDL);
+    }
+    
+    @Test
+    void testContactQuerySDL() {
+        final GraphQLSchema federatedSchema = Federation.transform(emptyWithContactQuerySDL).build();
+        SchemaUtils.assertSDL(federatedSchema, emptyWithContactQueryFederatedSDL, emptyWithContactQueryServiceSDL);
     }
 
     @Test

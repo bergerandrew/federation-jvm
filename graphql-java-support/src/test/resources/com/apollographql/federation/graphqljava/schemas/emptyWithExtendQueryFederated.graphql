@@ -1,3 +1,5 @@
+directive @contact(description: String, name: String, url: String) on SCHEMA
+
 directive @extends on OBJECT | INTERFACE
 
 directive @external on FIELD_DEFINITION
